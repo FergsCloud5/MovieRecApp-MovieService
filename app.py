@@ -1,3 +1,4 @@
+import MovieService
 from flask import Flask, Response
 from application_services.imdb_resource import IMDBResource
 from flask_cors import CORS
@@ -27,8 +28,15 @@ def get_movies():
 
 @app.route('/movies/<movie_id>')
 def get_movie_by_movie_id(movie_id):
-    res = IMDBResource.get_by_movie_id(movie_id)
-    rsp = Response(json.dumps(res), status=200, content_type="application/json")
+    if MovieService.check_movie_id(movie_id):
+        res = IMDBResource.get_by_movie_id(movie_id)
+        rsp = Response(json.dumps(res), status=200, content_type="application/json")
+    else:
+        msg = ("The Movie Recommendation Service is unable to provide any information on the movie with movie_id "
+               + f"= {str(movie_id)} at this moment. This movie does not exist in our database. Please double check "
+               + "your movie_id and try again."
+               )
+        rsp = Response(msg, status=404, content_type="application/json")
     return rsp
 
 
