@@ -2,6 +2,8 @@ import MovieService
 from flask import Flask, Response
 from application_services.imdb_resource import IMDBResource
 from flask_cors import CORS
+# from middleware import notifications as notify
+# from middleware import simple_security as sec
 import json
 
 import logging
@@ -26,6 +28,7 @@ def get_movies():
     return rsp
 
 
+# http://0.0.0.0:5000/movies/tt0298148
 @app.route('/movies/<movie_id>')
 def get_movie_by_movie_id(movie_id):
     if MovieService.check_movie_id(movie_id):
@@ -38,6 +41,17 @@ def get_movie_by_movie_id(movie_id):
                )
         rsp = Response(msg, status=404, content_type="application/json")
     return rsp
+
+
+@app.before_request
+def before_decorator():
+    print("before_request is running!")
+
+
+@app.after_request
+def after_decorator(response):
+    # print(JSON.dumpsresponse)
+    print("after_request is running!")
 
 
 if __name__ == '__main__':
