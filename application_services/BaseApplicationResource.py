@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class BaseApplicationExcetion:
+class BaseApplicationException:
 
     def __init__(self):
         pass
@@ -14,4 +14,4 @@ class BaseApplicationResource(ABC):
 
     @abstractmethod
     def get_links(self, resource_data):
-        pass
+        raise NotImplementedError("Must implement get_links.")

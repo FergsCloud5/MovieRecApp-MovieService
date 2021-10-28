@@ -27,6 +27,8 @@ class Security():
             # (200, , )
             return 200, "", ""
         else:
+            # fix this tbh, generalize the path with <movie_id> & actually
+            # no paths to blacklist for this service.
             print("it's a BLACK list path")
             # check to see if encrypted token in session is in user db
             # (400, redirect page, msg)

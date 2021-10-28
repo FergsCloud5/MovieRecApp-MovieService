@@ -24,13 +24,12 @@ def handle_error(code, path, msg):
 @application.before_request
 def before_decorator():
     print("before_request is running!")
-    print(request.path)
+    print("request.path:", request.path)
     a_ok = sec.check_authentication(request)
-    print(a_ok)
+    print("a_ok:", a_ok)
     if a_ok[0] != 200:
         handle_error(a_ok[0], a_ok[1], a_ok[2])
     # make check_auth return some boolean, to decide whether to not to redirect to login page
-
 
 @application.after_request
 def after_decorator(response):
@@ -45,7 +44,11 @@ def hello_world():
 
 @application.route('/movies')
 def get_movies():
-    res = IMDBResource.get_by_template(None)
+    if len(request.args) == 0:
+        template = {}
+    else:
+        template = dict(request.args)
+    res = IMDBResource.get_by_template(template)
     rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
     return rsp
 
