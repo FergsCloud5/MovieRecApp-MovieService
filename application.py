@@ -1,10 +1,13 @@
 import MovieService
-from flask import Flask, Response, request, sessions
+from flask import Flask, Response, request, sessions, redirect, url_for
 from application_services.imdb_resource import IMDBResource
 from flask_cors import CORS
 # from middleware.notifications import notifications as notify
 from middleware.simple_security import Security
 import json
+from flask_login import (LoginManager, UserMixin, current_user, login_user, logout_user)
+from flask_dance.contrib.google import make_google_blueprint, google
+import os
 
 import logging
 
@@ -16,10 +19,8 @@ application = Flask(__name__)
 CORS(application)
 sec = Security()
 
-
 def handle_error(code, path, msg):
     return
-
 
 @application.before_request
 def before_decorator():
@@ -29,7 +30,6 @@ def before_decorator():
     print("a_ok:", a_ok)
     if a_ok[0] != 200:
         handle_error(a_ok[0], a_ok[1], a_ok[2])
-    # make check_auth return some boolean, to decide whether to not to redirect to login page
 
 @application.after_request
 def after_decorator(response):
