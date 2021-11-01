@@ -1,8 +1,7 @@
 import MovieService
-from flask import Flask, Response, request, sessions
+from flask import Flask, Response, request
 from application_services.imdb_resource import IMDBResource
 from flask_cors import CORS
-# from middleware.notifications import notifications as notify
 from middleware.simple_security import Security
 import json
 
@@ -17,19 +16,15 @@ CORS(application)
 sec = Security()
 
 
-def handle_error(code, path, msg):
-    return
-
-
 @application.before_request
 def before_decorator():
     print("before_request is running!")
     print("request.path:", request.path)
-    a_ok = sec.check_authentication(request)
+    a_ok = sec.check_authentication(request.path)
     print("a_ok:", a_ok)
     if a_ok[0] != 200:
-        handle_error(a_ok[0], a_ok[1], a_ok[2])
-    # make check_auth return some boolean, to decide whether to not to redirect to login page
+        return a_ok
+
 
 @application.after_request
 def after_decorator(response):
@@ -49,6 +44,11 @@ def get_movies():
     else:
         template = dict(request.args)
     res = IMDBResource.get_by_template(template)
+    for i in range(len(res[-1]["links"])):
+        res[-1]["links"][i]["href"] = \
+            "http://18.224.30.158:5000/movies" + res[-1]["links"][i]["href"]
+    print(res[-1])
+    print("yo)")
     rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
     return rsp
 
@@ -56,6 +56,7 @@ def get_movies():
 # http://0.0.0.0:5000/movies/tt0298148
 @application.route('/movies/<movie_id>')
 def get_movie_by_movie_id(movie_id):
+    print("here")
     if MovieService.check_movie_id(movie_id):
         res = IMDBResource.get_by_movie_id(movie_id)
         rsp = Response(json.dumps(res), status=200, content_type="application/json")

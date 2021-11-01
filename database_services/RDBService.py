@@ -95,6 +95,14 @@ class RDBService:
             if k not in template.keys():
                 template[k] = default_pagination[k]
 
+        any_bad = (0 > int(template["limit"]) or int(template["limit"]) > 4919
+                   or 0 > int(template["offset"]) or int(template["offset"]) > 4919
+                   or 0 < int(template["limit"]) + int(template["offset"]) > 4919
+                   )
+        if any_bad:
+            template["limit"] = "20"
+            template["offset"] = "0"
+
         fields = template.get("fields", "*")
         template.pop("fields", None)
 
@@ -108,6 +116,38 @@ class RDBService:
         res = cur.fetchall()
 
         conn.close()
+
+        limit = template["limit"]
+        offset = template["offset"]
+
+        self_href = "?limit=" + limit + "&offset=" + offset
+        print(offset)
+        print(limit)
+        if 0 > int(offset) - int(limit) or int(offset) - int(limit) > 4919:
+            print("fuck")
+            prev_href = "?limit=" + limit + "&offset=" + offset
+        else:
+            prev_href = "?limit=" + limit + "&offset=" + str(int(offset) - int(limit))
+        if 0 > int(offset) + int(limit) > 4919:
+            next_href = "?limit=" + limit + "&offset=" + offset
+        else:
+            next_href = "?limit=" + limit + "&offset=" + str(int(offset) + int(limit))
+
+        res.append({"links": [
+                    {
+                        "rel": "self",
+                        "href": self_href,
+                    },
+                    {
+                        "rel": "prev",
+                        "href": prev_href,
+                    },
+                    {
+                        "rel": "next",
+                        "href": next_href,
+                    }]}
+        )
+        print(res[-1])
         return res
 
     @classmethod
