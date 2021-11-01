@@ -4,6 +4,9 @@ from application_services.imdb_resource import IMDBResource
 from flask_cors import CORS
 from middleware.simple_security import Security
 import json
+from flask_login import (LoginManager, UserMixin, current_user, login_user, logout_user)
+from flask_dance.contrib.google import make_google_blueprint, google
+import os
 
 import logging
 
@@ -15,7 +18,6 @@ application = Flask(__name__)
 CORS(application)
 sec = Security()
 
-
 @application.before_request
 def before_decorator():
     print("before_request is running!")
@@ -24,7 +26,6 @@ def before_decorator():
     print("a_ok:", a_ok)
     if a_ok[0] != 200:
         return a_ok
-
 
 @application.after_request
 def after_decorator(response):
