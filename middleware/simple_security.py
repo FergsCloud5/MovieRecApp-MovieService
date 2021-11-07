@@ -21,8 +21,6 @@ class Security:
         """
         Returns True is request.path is a white list path.
         Returns False if the request.path requires login.
-        TODO: GENERALIZE THE PATH WITH <MOVIE_ID> ADD TO WHITE LIST
-        TODO: WITH REGEX.
         """
         if path not in self.white_list.keys():
             if len(path) > 1:

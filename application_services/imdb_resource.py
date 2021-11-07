@@ -7,15 +7,6 @@ class IMDBResource(BaseApplicationResource):
     def __init__(self):
         super().__init__()
 
-    # def get_links(self, resource_data):
-    #     for r in resource_data:
-    #         # TODO: attribute name is actually movie_id? double check.
-    #         movie_id = r.get('movie_id')
-    #         links = []
-    #         self_link = {"rel": "self", "href": "/movies/" + str(movie_id)}
-    #         links.append(self_link)
-    #         r["links"] = links
-
     @classmethod
     def get_by_template(cls, template):
         res = RDBService.find_by_template("imdb", "imdb_ajax_metadata", template)

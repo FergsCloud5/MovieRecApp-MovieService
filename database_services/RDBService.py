@@ -172,22 +172,15 @@ class RDBService:
 
         attributes = {}
 
-        # if no offset given, we have result starting at first resource, no previous page
         if template.get("offset", 0) == 0:
             attributes["offset"] = None
             attributes["limit"] = None
             return attributes
-        # if offset exists, but it is smaller than the limit
-        # return the offset = 0, limit = limit (or 20, by default)
         elif int(template.get("offset", 0)) <= int(template.get("limit", 20)):
             attributes["offset"] = 0
             attributes["limit"] = int(template.get("limit", 20))
             return attributes
         else:
-            # otherwise we have a regular previous page, add limit to offset and give next page
-            # ex: If we have offset = 10, limit = 10, next page is:
-            #                offset = 20, limit = 10
-            #                ^ here we add limit (10) to the offset and keep limit as is
             attributes["offset"] = int(template.get("offset", 0)) - int(template.get("limit", 20))
             attributes["limit"] = int(template.get("limit", 20))
 
