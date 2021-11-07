@@ -121,10 +121,7 @@ class RDBService:
         offset = template["offset"]
 
         self_href = "?limit=" + limit + "&offset=" + offset
-        print(offset)
-        print(limit)
         if 0 > int(offset) - int(limit) or int(offset) - int(limit) > 4919:
-            print("fuck")
             prev_href = "?limit=" + limit + "&offset=" + offset
         else:
             prev_href = "?limit=" + limit + "&offset=" + str(int(offset) - int(limit))
@@ -147,7 +144,6 @@ class RDBService:
                         "href": next_href,
                     }]}
         )
-        print(res[-1])
         return res
 
     @classmethod

@@ -47,9 +47,7 @@ def get_movies():
     res = IMDBResource.get_by_template(template)
     for i in range(len(res[-1]["links"])):
         res[-1]["links"][i]["href"] = \
-            "http://18.224.30.158:5000/movies" + res[-1]["links"][i]["href"]
-    print(res[-1])
-    print("yo)")
+            "/movies" + res[-1]["links"][i]["href"]
     rsp = Response(json.dumps(res, default=str), status=200, content_type="application/json")
     return rsp
 
@@ -57,7 +55,6 @@ def get_movies():
 # http://0.0.0.0:5000/movies/tt0298148
 @application.route('/movies/<movie_id>')
 def get_movie_by_movie_id(movie_id):
-    print("here")
     if MovieService.check_movie_id(movie_id):
         res = IMDBResource.get_by_movie_id(movie_id)
         rsp = Response(json.dumps(res), status=200, content_type="application/json")
