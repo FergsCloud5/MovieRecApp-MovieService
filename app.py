@@ -35,7 +35,7 @@ def after_decorator(response):
 
 @application.route('/')
 def hello_world():
-    return '<u>Hello World!</u>'
+    return '<u>Hello Docker!</u>'
 
 
 @application.route('/movies')
