@@ -1,15 +1,30 @@
-# build an image starting with the Python 3.7 image
-FROM python:3.8
+## build an image starting with the Python 3.7 image
+#FROM python:3.8
 
-# set the working directory to /MovieRecApp-MovieService
-WORKDIR /MovieRecApp-MovieService
+## set the working directory to /MovieRecApp-MovieService
+#WORKDIR /MovieRecApp-MovieService
 
-# install dependencies
+## install dependencies
+#COPY . .
+#RUN pip install --upgrade pip
+#RUN pip install -r requirements.txt
+
+## adding metadata to the image to describe that the container is listening on port 5000
+#EXPOSE 5000
+## set the default command for the container to python3 application.py
+#CMD["python3", "application.py"]
+
+# syntax=docker/dockerfile:1
+
+FROM python:3.8-slim-buster
+
+WORKDIR /application
+
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+
 COPY . .
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
 
-# adding metadata to the image to describe that the container is listening on port 5000
-EXPOSE 5000
-# set the default command for the container to python3 application.py
-CMD["python3", "application.py"]
+# CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+
+CMD [ "python", "application.py", "--host=0.0.0.0"]
